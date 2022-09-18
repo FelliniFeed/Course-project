@@ -7,16 +7,17 @@ const Users = () => {
     const handleDelete = (userId) => setUsers(prevState => prevState.filter(user => user._id !== userId));
     
     const renderPhrase = (number) => {
-       return  number !== 0 ? <h1 className="badge bg-primary fs-3">{`${number} человек с тобой тусанет`}</h1> :
-       <h1 className="badge bg-danger fs-3">Никто с тобой не тусанет</h1>
+       return  number !== 0 && number !== 2 && number !== 3 && number !== 4 ? <h1 className="badge bg-primary fs-3">{`${number} человек с тобой тусанет`}</h1> :
+        (number === 2 || number === 3 || number === 4) ? <h1 className="badge bg-primary fs-3">{`${number} человека с тобой тусанет`}</h1> :
+        <h1 className="badge bg-danger fs-3">Никто с тобой не тусанет</h1>
     };
     
     return users.length > 0 ? (
 
         <>
-        
+
        {renderPhrase(users.length) }
-        
+
         <table className="table">
         <thead>
           <tr>
@@ -30,11 +31,11 @@ const Users = () => {
         </thead>
         <tbody>
             {users.map((user) => (
-                <tr>
-                    <td key={user._id}>{user.name}</td>
+                <tr key={user._id}>
+                    <td>{user.name}</td>
                     <td> 
                         {user.qualities.map((quality) => (
-                        <div className={`badge bg-${quality.color} m-1`}>{quality.name}</div>
+                        <div key={quality._id} className={`badge bg-${quality.color} m-1`}>{quality.name}</div>
                         ))}
                     </td>
                     <td>
