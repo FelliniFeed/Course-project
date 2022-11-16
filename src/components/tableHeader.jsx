@@ -12,12 +12,12 @@ const TableHeader = ({ onSort, selectedSort, columns }) => {
             onSort({ path: item, order: "asc" });
         }
     };
-    const renderSortArrow = (item) => {
-        if (selectedSort.path === item) {
-            if (selectedSort.order === "desc") {
-                return <i className="bi bi-caret-up-fill"></i>;
-            }
-            return <i className="bi bi-caret-down-fill"></i>;
+    const renderSortArrow = (columnPath) => {
+        if (selectedSort.path === columnPath) {
+            const isAsc = selectedSort.order === "asc";
+            return (
+                <i className={`bi bi-caret-${isAsc ? "up" : "down"}-fill`}></i>
+            );
         }
     };
     return (
