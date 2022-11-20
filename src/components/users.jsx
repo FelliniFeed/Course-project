@@ -109,8 +109,9 @@ const Users = () => {
     }
     return "loading";
 };
-export default Users;
 
 Users.propTypes = {
     users: PropTypes.array
 };
+
+export default Users;
