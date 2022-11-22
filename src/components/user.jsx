@@ -2,6 +2,7 @@ import React from "react";
 import Qualitie from "./qualitie";
 import BookMark from "./bookmark";
 import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 
 const User = ({
     name,
@@ -17,7 +18,7 @@ const User = ({
     return (
         <>
             <tr>
-                <td>{name}</td>
+                <NavLink to="users/:userId">{name}</NavLink>
                 <td>
                     {qualities.map((qualitie) => (
                         <Qualitie key={qualitie._id} {...qualitie} />
