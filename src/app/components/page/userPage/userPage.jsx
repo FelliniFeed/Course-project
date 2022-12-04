@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import api from "../../../api";
 import { useHistory } from "react-router-dom";
 import Qualities from "../../ui/qualities";
-import PropType from "prop-types";
+import PropTypes from "prop-types";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
     useEffect(() => {
         api.users.getById(userId).then((data) => setUser(data));
-    });
+    }, []);
+    console.log(user);
     const handleClick = () => {
-        history.push("/users");
+        history.push(`/users/:${userId}/edit`);
     };
     if (user) {
         return (
@@ -21,7 +22,7 @@ const UserPage = ({ userId }) => {
                 <Qualities qualities={user.qualities}/>
                 <p>completedMeetings: {user.completedMeetings}</p>
                 <h2>Rate: {user.rate}</h2>
-                <button onClick={handleClick}>Все пользователи</button>
+                <button onClick={handleClick}>Изменить</button>
             </div>
         );
     } else {
@@ -29,8 +30,8 @@ const UserPage = ({ userId }) => {
     }
 };
 
-UserPage.propType = {
-    userId: PropType.string.isRequired
+UserPage.propTypes = {
+    userId: PropTypes.string.isRequired
 };
 
 export default UserPage;

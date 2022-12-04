@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
+import CheckBoxFeild from "../common/form/checkBoxFeild";
 
 const LoginForm = () => {
-    const [data, setData] = useState({ email: "", password: "" });
+    const [data, setData] = useState({
+        email: "",
+        password: "",
+        stayOn: false
+    });
     const [errors, setErrors] = useState({});
-    const handleChange = ({ target }) => {
+    const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
@@ -29,7 +34,7 @@ const LoginForm = () => {
                 message: "Пароль должен соджержать хотя бы одну заглавную букву"
             },
             isContainDigit: {
-                message: "Пароль должен содержать хотя бы одну цыфру"
+                message: "Пароль должен содержать хотя бы одну цифру"
             },
             min: {
                 message: "Пароль должен состоять из 8 символов",
@@ -38,7 +43,9 @@ const LoginForm = () => {
         }
     };
 
-    useEffect(() => { validate(); }, [data]);
+    useEffect(() => {
+        validate();
+    }, [data]);
 
     const validate = () => {
         const errors = validator(data, validatorConfig);
@@ -61,7 +68,7 @@ const LoginForm = () => {
                 name="email"
                 value={data.email}
                 onChange={handleChange}
-                error= {errors.email}
+                error={errors.email}
             />
             <TextField
                 label="Password"
@@ -69,9 +76,20 @@ const LoginForm = () => {
                 name="password"
                 value={data.password}
                 onChange={handleChange}
-                error= {errors.password}
+                error={errors.password}
             />
-            <button type="submit" disabled={!isValid} className="btn btn-primary w-100 mx-auto">
+            <CheckBoxFeild
+                value={data.stayOn}
+                onChange={handleChange}
+                name="stayOn"
+            >
+                Оставаться в системе
+            </CheckBoxFeild>
+            <button
+                type="submit"
+                disabled={!isValid}
+                className="btn btn-primary w-100 mx-auto"
+            >
                 Submit
             </button>
         </form>
