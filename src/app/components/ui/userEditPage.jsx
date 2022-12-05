@@ -7,13 +7,13 @@ import api from "../../api";
 
 const UserEditPage = () => {
     const [data, setData] = useState({
+        name: "",
         email: "",
         password: "",
         profession: "",
         sex: "male",
         qualities: []
     });
-    const [user, setUser] = useState([]);
     const [qualities, setQualities] = useState([]);
     const [professions, setProfessions] = useState([]);
 
@@ -33,21 +33,7 @@ const UserEditPage = () => {
             }));
             setQualities(qualitiesList);
         });
-        api.users.fetchAll().then((data) => {
-            const usersFormEdit = Object.keys(data).map((userFormEdit) => ({
-                name: data[userFormEdit].name,
-                id: data[userFormEdit]._id,
-                email: data[userFormEdit].email,
-                sex: data[userFormEdit].sex,
-                profession: data[userFormEdit].profession.name,
-                qualitie: data[userFormEdit].qualities.name
-            }));
-            setUser(usersFormEdit);
-        });
-        api.users.update().then((data) => {
-            setUser(data);
-        });
-        setUser(user);
+        api.users.fetchAll().then((data) => setData(data));
     }, []);
 
     const handleChange = (target) => {
@@ -57,7 +43,7 @@ const UserEditPage = () => {
         }));
     };
 
-    if (user) {
+    if (data) {
         return (
             <div className="container mt-5">
                 <div className="row">
@@ -76,13 +62,13 @@ const UserEditPage = () => {
                         />
                         <SelectField
                             label="Выбери свою профессию"
-                            defaultOption={data.profession.name}
+                            defaultOption="Choose..."
                             name="profession"
                             options={professions}
                             onChange={handleChange}
                             value={data.profession}
                         />
-                        {console.log(user)}
+
                         <RadioField
                             options={[
                                 { name: "Male", value: "male" },
@@ -97,7 +83,7 @@ const UserEditPage = () => {
                         <MultiSelectFiled
                             options={qualities}
                             onChange={handleChange}
-                            defaultValue={data.qualities.name}
+                            defaultValue={data.qualities}
                             name="qualities"
                             label="Выберите ваши качества"
                         />
