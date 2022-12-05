@@ -4,8 +4,11 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectFiled from "../common/form/multiSelectField";
 import api from "../../api";
+import { useParams } from "react-router-dom";
 
 const UserEditPage = () => {
+    const params = useParams();
+    const { userId } = params;
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -33,7 +36,10 @@ const UserEditPage = () => {
             }));
             setQualities(qualitiesList);
         });
-        api.users.fetchAll().then((data) => setData(data));
+        api.users.getById(userId).then((data) => {
+            setData(data);
+            console.log(data);
+        });
     }, []);
 
     const handleChange = (target) => {
@@ -66,7 +72,7 @@ const UserEditPage = () => {
                             name="profession"
                             options={professions}
                             onChange={handleChange}
-                            value={data.profession}
+                            value={data.profession.name}
                         />
 
                         <RadioField
@@ -75,7 +81,7 @@ const UserEditPage = () => {
                                 { name: "Female", value: "female" },
                                 { name: "Other", value: "other" }
                             ]}
-                            value={data.sex}
+                            value={data.sex.name}
                             name="sex"
                             onChange={handleChange}
                             label="Выберите ваш пол"
@@ -83,7 +89,7 @@ const UserEditPage = () => {
                         <MultiSelectFiled
                             options={qualities}
                             onChange={handleChange}
-                            defaultValue={data.qualities}
+                            defaultValue={data.qualities.name}
                             name="qualities"
                             label="Выберите ваши качества"
                         />
