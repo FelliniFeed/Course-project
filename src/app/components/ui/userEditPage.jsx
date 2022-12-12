@@ -158,7 +158,7 @@ const UserEditPage = () => {
                                 name="profession"
                                 options={ professions }
                                 onChange={ handleChange }
-                                value={ data.profession._id }
+                                value={ data.profession }
                                 error={errors.profession}
                             />
                             <RadioField
