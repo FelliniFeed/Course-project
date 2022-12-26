@@ -7,6 +7,7 @@ import api from "../../../api";
 import SearchStatuis from "../../ui/searchStatus";
 import UsersTable from "../../ui/usersTable";
 import _ from "lodash";
+import { useUser } from "../../../hooks/useUsers";
 
 const UsersListPage = () => {
     const pageSize = 8;
@@ -17,24 +18,21 @@ const UsersListPage = () => {
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [searchQuery, setSearchQuery] = useState("");
 
-    const [users, setUsers] = useState();
+    const { users } = useUser();
 
-    useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data));
-    }, []);
-
-    const handleDelete = (userId) =>
-        setUsers(users.filter((user) => user._id !== userId));
-
+    const handleDelete = (userId) => {
+        // setUsers(users.filter((user) => user._id !== userId));
+        console.log(userId);
+    };
     const handleToggleBookmark = (id) => {
-        setUsers(
-            users.map((user) => {
-                if (user._id === id) {
-                    return { ...user, bookmark: !user.bookmark };
-                }
-                return user;
-            })
-        );
+        const newArray = users.map((user) => {
+            if (user._id === id) {
+                return { ...user, bookmark: !user.bookmark };
+            }
+            return user;
+        });
+        // setUsers(newArray);
+        console.log(newArray);
     };
 
     useEffect(() => {
@@ -66,21 +64,25 @@ const UsersListPage = () => {
     if (users) {
         const filteredUsers = searchQuery
             ? users.filter(
-                (user) =>
-                    user.name
-                        .toLowerCase()
-                        .indexOf(searchQuery.toLowerCase()) !== -1
-            )
+                  (user) =>
+                      user.name
+                          .toLowerCase()
+                          .indexOf(searchQuery.toLowerCase()) !== -1
+              )
             : selectedProf
-                ? users.filter(
-                    (user) =>
-                        JSON.stringify(user.profession) ===
-                        JSON.stringify(selectedProf)
-                )
-                : users;
+            ? users.filter(
+                  (user) =>
+                      JSON.stringify(user.profession) ===
+                      JSON.stringify(selectedProf)
+              )
+            : users;
 
         const count = filteredUsers.length;
-        const sortUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
+        const sortUsers = _.orderBy(
+            filteredUsers,
+            [sortBy.path],
+            [sortBy.order]
+        );
         const userCrop = paginate(sortUsers, currentPage, pageSize);
         const clearFilter = () => {
             setSelectedProf();
@@ -91,11 +93,16 @@ const UsersListPage = () => {
                 {professions && (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
                         <GroupList
-                            selectedItem = {selectedProf}
-                            items = {professions}
-                            onItemSelect = {handleProfessionSelect}
+                            selectedItem={selectedProf}
+                            items={professions}
+                            onItemSelect={handleProfessionSelect}
                         />
-                        <button className="btn btn-secondary mt-2" onClick={clearFilter}>Очистить</button>
+                        <button
+                            className="btn btn-secondary mt-2"
+                            onClick={clearFilter}
+                        >
+                            Очистить
+                        </button>
                     </div>
                 )}
                 <div className="d-flex flex-column">
