@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxFeild from "../common/form/checkBoxFeild";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const LoginForm = () => {
     const [data, setData] = useState({
@@ -9,12 +11,16 @@ const LoginForm = () => {
         password: "",
         stayOn: false
     });
+    const history = useHistory();
+    const { logIn } = useAuth();
     const [errors, setErrors] = useState({});
+    const [enterError, setEnterError] = useState(null);
     const handleChange = (target) => {
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
         }));
+        setEnterError(null);
     };
 
     const validatorConfig = {
@@ -42,7 +48,6 @@ const LoginForm = () => {
             }
         }
     };
-
     useEffect(() => {
         validate();
     }, [data]);
@@ -55,11 +60,20 @@ const LoginForm = () => {
 
     const isValid = Object.keys(errors).length === 0;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+        try {
+            await logIn(data);
+            history.push(
+                history.location.state
+                    ? history.location.state.from.pathname
+                    : "/"
+            );
+        } catch (error) {
+            setEnterError(error.message);
+        }
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -85,6 +99,7 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxFeild>
+            {enterError && <p className="text-danger">{enterError}</p>}
             <button
                 type="submit"
                 disabled={!isValid}
