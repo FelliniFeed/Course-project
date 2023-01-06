@@ -21,7 +21,7 @@ const UserProvider = ({ children }) => {
             toast(error);
             setError(null);
         }
-    }, [error])
+    }, [error]);
     async function getUsers() {
         try {
             const { content } = await userService.get();
@@ -36,7 +36,15 @@ const UserProvider = ({ children }) => {
         setError(message);
         setIsLoading();
     }
-    return <UserContext.Provider value={{ users }}>{!isLoading ? children : <h1>Loading...</h1>}</UserContext.Provider>;
+
+    function getUserById(userId) {
+        return users.find((u) => u._id === userId);
+    }
+    return (
+        <UserContext.Provider value={{ users, getUserById }}>
+            {!isLoading ? children : <h1>Loading...</h1>}
+        </UserContext.Provider>
+    );
 };
 
 UserProvider.propTypes = {
